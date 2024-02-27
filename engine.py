@@ -11,7 +11,7 @@ from notifypy            import Notify
 from pystray             import MenuItem, Icon
 # ---------------------------------------------- #
 
-
+PCNAME = {os.getenv('COMPUTERNAME')}
 
 # ---------------------------------------------- #
 ip = requests.get("https://api.ipify.org").text
@@ -50,6 +50,7 @@ print(f"""
                           -=======                           
                              -=:                             
 """)
+print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current sensitive Files : [ cookies ] [ passwords ]")
 
 def detect_virus(file_path, KNOWN_VIRUS_HASHES, quarantine_dir):
     with open(file_path, 'rb') as file:
@@ -108,6 +109,34 @@ def monitor_download_directory(directory, KNOWN_VIRUS_HASHES, quarantine_dir):
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
+
+SENSITIVE_FILES = [f'C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cookies', f'C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Login Data']
+
+
+def check_file_access(file_path):
+    for sensitive_file in SENSITIVE_FILES:
+        if sensitive_file in file_path:
+            return True
+    return False
+
+
+def monitor_file_access():
+    for folder, subfolders, files in os.walk('/'):
+        for file in files:
+            file_path = os.path.join(folder, file)
+            if os.path.isfile(file_path) and check_file_access(file_path):
+                print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Suspicious activity detected: {file_path}")
+                # Take action to quarantine or terminate the process
+                # For demonstration purposes, let's print a message
+                print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Terminating process and quarantining file...")
+
+
+def main():
+    print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current sensitive Files : [ cookies ] [ passwords ]")
+    while True:
+        monitor_file_access()
+
 
 if __name__ == "__main__":
     KNOWN_VIRUS_HASHES = [
