@@ -7,7 +7,7 @@
 
 <p align="center">
   Discord: Discord.gg/villa1
-  >> [Biolink](https://downfall.wiki/veal)
+  >> https://downfall.wiki/veal
   <br>
   🔱 Join Discord for support and contact 🔱
   Dont forget to Star the repo and follow my page
