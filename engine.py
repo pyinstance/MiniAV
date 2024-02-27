@@ -19,16 +19,37 @@ icon = Icon("MiniAV.ico")
 icon.menu = (MenuItem('Exit', lambda: icon.stop()),)
 # ---------------------------------------------- #
 
-
-print(f"{Fore.LIGHTWHITE_EX}----------------------------------------------------------------------------")
-print(f"{Fore.LIGHTCYAN_EX}                   Mini-AV Is now Active")
-print(f"{Fore.LIGHTCYAN_EX}                   Secure {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}Check")
-print(f"{Fore.LIGHTCYAN_EX}                   PC Name {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{os.getenv('COMPUTERNAME')}")
-print(f"{Fore.LIGHTCYAN_EX}                   System IP {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{ip}")
-print(f"{Fore.LIGHTCYAN_EX}                   Copyright © Mini-AV ")
-print(f"{Fore.LIGHTYELLOW_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTCYAN_EX}Veal ")
-print(f"{Fore.LIGHTYELLOW_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTCYAN_EX}Synthetic ")
-print(f"{Fore.LIGHTWHITE_EX}----------------------------------------------------------------------------")
+print(f"""                                     
+                  :---:::::::::::::::::::::                  
+                  =========================                  
+                 -==--------------------===:                 
+                -===--=---------------=--===.                
+              -====--=--=============-----====               
+        .-=======---=-----------------------======-:         
+        ======----=----------------------------======        
+        ===----=-----------------------------=----===        
+        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   Mini-AV Is now Active"){Fore.RESET}
+        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   Secure {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}Check"){Fore.RESET}
+        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   PC Name {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{os.getenv('COMPUTERNAME')}"){Fore.RESET}
+        ===--------------=@@@@@@@@@------------=--===        {Fore.LIGHTCYAN_EX}                   System IP {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{ip}"){Fore.RESET}
+        ===--=-----------@@@@@@@@@@@-----------=--===        {Fore.LIGHTCYAN_EX}                   Copyright © Mini-AV "){Fore.RESET}
+        ===--=----------@@@--@@---@@%-------------==-        {Fore.LIGHTYELLOW_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTCYAN_EX}Veal "){Fore.RESET}
+        ===-------------@@@@@@@@@@@@@------------===.        {Fore.LIGHTYELLOW_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTCYAN_EX}Synthetic "){Fore.RESET}
+        .===--=----------@@@-----@@#----------=--===         
+         ===------------------------------------===-         
+          ===--=--------------------------------===          
+          :===--=------------------------------===           
+           -===-------------------------------===            
+            -===-------------------------=---===             
+             :====--=----------------------====              
+               ====---=-------------------===:               
+                :====----=---------=----===-                 
+                  :====---------=----=====                   
+                    .=====---------====-                     
+                       :=====---=====                        
+                          -=======                           
+                             -=:                             
+""")
 
 def detect_virus(file_path, KNOWN_VIRUS_HASHES, quarantine_dir):
     with open(file_path, 'rb') as file:
