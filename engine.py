@@ -110,7 +110,7 @@ def monitor_download_directory(directory, KNOWN_VIRUS_HASHES, quarantine_dir):
         observer.stop()
     observer.join()
 
-
+# everything from here is used to monitor if the stealer is activly trying to decrypt passwords to send to the webhook / Bot / Telegram chat / C2
 SENSITIVE_FILES = [f'C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cookies', f'C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Login Data']
 
 
