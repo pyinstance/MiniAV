@@ -1,35 +1,31 @@
 import os
 import ctypes
-import winreg
-import shutil
-import hashlib
+import psutil
 import requests
+import time
+import threading
+import json
 
 # -------------------------------- #
 from PIL import Image
 from getpass import getuser
-from time import time, sleep
+from time import sleep
 from colorama import Fore
-from notifypy import Notify
-from ctypes import wintypes
-from pystray import MenuItem, Icon
 from multiprocessing import Process
 from watchdog.observers import Observer
 from threading import Thread, Timer, Event
 from watchdog.events import FileSystemEventHandler
-
-# ---------------------------------------------- #
-
-PCNAME = str(getuser())
+# ------------------------------------------- #
 
 # ---------------------------------------------- #
 ip = requests.get("https://api.ipify.org").text
-icon = Icon("MiniAV.ico")
-icon.menu = (MenuItem("Exit", lambda: icon.stop()),)
 # ---------------------------------------------- #
 
 b = Fore.LIGHTBLUE_EX
-r = Fore.RESET
+g = Fore.LIGHTGREEN_EX
+w = Fore.WHITE
+r = Fore.LIGHTRED_EX
+rs = Fore.RESET
 
 
 # ---------------------------------------------- #
@@ -58,22 +54,15 @@ class title:
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
+# ------------------------------------------- #
 
-# ---------------------------------------------- #
+b = Fore.LIGHTBLUE_EX
+r = Fore.RESET
+
+# ------------------------------------------- #
 
 
-DISCORD_REGISTRY_KEYS = [
-    r"Software\Discord",
-    r"Software\DiscordOverlay",
-    # Add more Discord registry keys If needed you dont have to
-]
 
-clear()  # Clears the terminal
-
-# Define Windows API constants and structures
-# This is used to stop Stealers from killing the protector
-PROCESS_CREATION_MITIGATION_POLICY = 22
-PROCESS_CREATION_CHILD_PROCESS_RESTRICTED = 1
 
 print(
     f"""                                     
@@ -108,175 +97,72 @@ print(
                              -=:                             
 """
 )
+
+
+print(f"[{g}✓{w}] Loading Config For Whitelisted Programs...")
+sleep(1)
+print(f"[{g}✓{w}] Config Loaded Successfully!")
 print(
-    f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current sensitive Files : [ cookies ] [ passwords ]"
-)
+    f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current sensitive Files : [ cookies ] [ passwords ]")
 sleep(2)
 print(
-    f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current File For Changes Or Injection : [ Discord Cache ]"
-)
+    f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current File For Changes Or Injection : [ Discord Cache ]")
 sleep(2)
 print(
-    f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current Registery for Changes Or Injection : [ Discord Reg Keys ]"
-)
+    f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current Registery for Changes Or Injection : [ Discord Reg Keys ]")
 
+# List of allowed programs
+allowed_programs = ["cmd.exe", 
+                    "powershell.exe", 
+                    "explorer.exe", 
+                    "chrome.exe", 
+                    "firefox.exe", 
+                    "opera.exe", 
+                    "msedge.exe", 
+                    "discord.exe", 
+                    "python.exe", 
+                    "Code.exe",
+                    "ShareX.exe",
+                    "pia-client.exe",
+                    "Mullvad VPN.exe"]
 
-def detect_virus(file_path, KNOWN_VIRUS_HASHES, quarantine_dir):
-    with open(file_path, "rb") as file:
-        content = file.read()
-        file_hash = hashlib.sha256(content).hexdigest()
-        if file_hash in KNOWN_VIRUS_HASHES:
-            notification = Notify()
-            notification.app_name = "Mini-AV"
-            notification.title = "Mini-AV > Virus Detected"
-            notification.message = f"Mini-AV Quarantined : {file_path}"
-            notification.icon = "Mini-AV.ico"
-            notification.send()
-            with open("log.txt", "a") as log_file:
-                log_file.write(f"[Mini-AV-INFO] Quarantined File: {file_path}\n")
-            quarantine_file(file_path, quarantine_dir)
-            os.remove(file_path)
+def monitor_processes():
+    while True:
+        # Check for new processes
+        for proc in psutil.process_iter(['pid', 'name', 'exe', 'ppid']):
+            try:
+                process_name = proc.info['name']
+                process_exe = proc.info['exe']
+                parent_pid = proc.info['ppid']
+                if process_exe:  # Check if process_exe is not None
+                    process_size = os.path.getsize(process_exe) / (1024 * 1024)  # Convert to MB
+                    if (process_size < 40 and is_user_initiated(parent_pid) and 
+                        process_name not in allowed_programs and process_name != "DiscProc"):
+                        pid = proc.pid
+                        print(f"[{Fore.RED}X{Fore.WHITE}] [ {Fore.RED}ALERT {Fore.WHITE}] : {process_name} (PID: {pid})")
+                        # Terminate the process
+                        try:
+                            proc.terminate()
+                            print(f"[{g}+{w}] [ {g}INFO {g}] {w}Terminated {g}{process_name}{w} (PID: {g}{pid}) {w}File Size : {g}({process_size:.2f} MB)...")
+                        except psutil.NoSuchProcess:
+                            print(f"Process {process_name} (PID: {pid}) not found!")
+            except (psutil.AccessDenied, psutil.NoSuchProcess, FileNotFoundError, TypeError):
+                pass
+        time.sleep(5)
 
-
-def quarantine_file(file_path, quarantine_dir):
-    filename = os.path.basename(file_path)
-    quarantined_path = os.path.join(quarantine_dir, filename)
-    quarantined_path = (
-        quarantined_path + ".Mini-AV"
-    )  # Change file extension to prevent execution
-    shutil.move(file_path, quarantined_path)
+# Function to check if a process is initiated by the user
+def is_user_initiated(parent_pid):
     try:
-        sleep(4)
-        os.remove(file_path)
-        print(f"File : {file_path} Has Successfully been removed")
-    except Exception as e:
-        print(f"[ ERROR] {e}")
-
-
-def scan_file(file_path, KNOWN_VIRUS_HASHES, quarantine_dir):
-    p = Process(
-        target=detect_virus, args=(file_path, KNOWN_VIRUS_HASHES, quarantine_dir)
-    )
-    p.start()
-
-
-class NewFileEventHandler(FileSystemEventHandler):
-    def __init__(self, KNOWN_VIRUS_HASHES, quarantine_dir):
-        self.KNOWN_VIRUS_HASHES = KNOWN_VIRUS_HASHES
-        self.quarantine_dir = quarantine_dir
-        if not os.path.exists(quarantine_dir):
-            os.makedirs(quarantine_dir)
-
-    def on_created(self, event):
-        if not event.is_directory:
-            file_path = event.src_path
-            scan_file(file_path, self.KNOWN_VIRUS_HASHES, self.quarantine_dir)
-
-
-def monitor_download_directory(directory, KNOWN_VIRUS_HASHES, quarantine_dir):
-    event_handler = NewFileEventHandler(KNOWN_VIRUS_HASHES, quarantine_dir)
-    observer = Observer()
-    observer.schedule(event_handler, directory, recursive=True)
-    observer.start()
-    try:
-        while True:
-            sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
-
-
-SENSITIVE_FILES = [
-    f"C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cookies",
-    f"C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Login Data",
-]
-DISCORD_PATH = f"C:\\Users\\{PCNAME}\\AppData\\Roaming\\discord\\Cache"
-
-
-def check_file_access(file_path):
-    for sensitive_file in SENSITIVE_FILES:
-        if sensitive_file in file_path:
+        parent_process = psutil.Process(parent_pid)
+        parent_name = parent_process.name()
+        if parent_name in ['explorer.exe', 'cmd.exe']:
             return True
-    if DISCORD_PATH in file_path:
-        return True
+    except (psutil.NoSuchProcess, psutil.AccessDenied):
+        pass
     return False
 
-
-def monitor_file_access():
-    for folder, subfolders, files in os.walk("/"):
-        for file in files:
-            file_path = os.path.join(folder, file)
-            if os.path.isfile(file_path) and check_file_access(file_path):
-                print(
-                    f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Suspicious activity detected: {file_path}"
-                )
-                # Take action to quarantine or terminate the process
-                # For demonstration purposes, let's print a message
-                print(
-                    f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Terminating process and quarantining file..."
-                )
-
-
-def main():
-    print(
-        f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current sensitive Files : [ cookies ] [ passwords ]"
-    )
-    while True:
-        monitor_file_access()
-
-
-class Process_Policy(ctypes.Structure):
-    _fields_ = [
-        ("Policy", wintypes.DWORD),
-        ("Flags", wintypes.DWORD),
-    ]
-
-
-def check_registry_changes():
-    for key_path in DISCORD_REGISTRY_KEYS:
-        try:
-            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_READ)
-            num_subkeys, num_values, last_modified = winreg.QueryInfoKey(key)
-            print(
-                f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Registry key detected: {key_path}"
-            )
-
-            print(
-                f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}INFO {Fore.WHITE}] Terminating process and quarantining file..."
-            )
-        except Exception as e:
-            print(
-                f"{Fore.WHITE}[ {Fore.LIGHTBLUE_EX}Error {Fore.WHITE}] Error accessing registry key {key_path}: {e}"
-            )
-
-
-def apply_Process_Policy():
-    policy = Process_Policy()
-    policy.Policy = PROCESS_CREATION_MITIGATION_POLICY
-    policy.Flags = PROCESS_CREATION_CHILD_PROCESS_RESTRICTED
-    ctypes.windll.kernel32.SetProcessMitigationPolicy(
-        PROCESS_CREATION_MITIGATION_POLICY, ctypes.byref(policy), ctypes.sizeof(policy)
-    )
-
-
-def main():
-    apply_Process_Policy()
-    while True:
-        check_registry_changes()
-
-
 if __name__ == "__main__":
-    Title = title()
-    KNOWN_VIRUS_HASHES = [
-        "df8c6f81a5e2aba5013c9ac111da3d9718b0349b52657e3763135ff0ec07f73d",  # All Centurion Hashes and different obfuscation Methods
-        "015fbc0b216d197136df8692b354bf2fc7bd6eb243e73283d861a4dbbb81a751",  # All Centurion Hashes and different obfuscation Methods
-        "17f2eb260f0b6942f80453b30f1a13235f27b7ed80d4e5815fb58ff7322fc765",  # All Centurion Hashes and different obfuscation Methods
-        "36c7bbf70459d63163aa9d8d43b9ca1a02f837d53004a9ad0574f687e5a6a9d2",  # All Centurion Hashes and different obfuscation Methods
-        "55cee457c73aa87258a04562c9d04cd3c865608d5dd64366d9cd9bc2fe2f5dd9",  # All Centurion Hashes and different obfuscation Methods
-        "92e1c28b32241eea5778a35dbb092ce77917395323b722d99aa2bf7efcce9cc8",  # Empyrean Stealer
-        "6e0ca09171ff5d693972d3affb97a24e30606ce64259508116d7e2cfbe958ade",  # Villa Stealer
-    ]
-    download_directory = os.path.join(os.getenv("USERPROFILE"), "Downloads")
-    quarantine_dir = "C:\\Quarantine"  # Specify the directory for quarantined files
+    process_monitor_thread = threading.Thread(target=monitor_processes)
+    process_monitor_thread.start()
 
-    monitor_download_directory(download_directory, KNOWN_VIRUS_HASHES, quarantine_dir)
+    process_monitor_thread.join()
