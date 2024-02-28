@@ -28,13 +28,13 @@ print(f"""
         .-=======---=-----------------------======-:         
         ======----=----------------------------======        
         ===----=-----------------------------=----===        
-        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   Mini-AV Is now Active"){Fore.RESET}
-        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   Secure {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}Check"){Fore.RESET}
-        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   PC Name {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{os.getenv('COMPUTERNAME')}"){Fore.RESET}
-        ===--------------=@@@@@@@@@------------=--===        {Fore.LIGHTCYAN_EX}                   System IP {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{ip}"){Fore.RESET}
-        ===--=-----------@@@@@@@@@@@-----------=--===        {Fore.LIGHTCYAN_EX}                   Copyright © Mini-AV "){Fore.RESET}
-        ===--=----------@@@--@@---@@%-------------==-        {Fore.LIGHTYELLOW_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTCYAN_EX}Veal "){Fore.RESET}
-        ===-------------@@@@@@@@@@@@@------------===.        {Fore.LIGHTYELLOW_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTCYAN_EX}Synthetic "){Fore.RESET}
+        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   Mini-AV Is now Active{Fore.RESET}
+        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   Secure {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}Check{Fore.RESET}
+        ===------------------------------------=--===        {Fore.LIGHTCYAN_EX}                   PC Name {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{os.getenv('COMPUTERNAME')}{Fore.RESET}
+        ===--------------=@@@@@@@@@------------=--===        {Fore.LIGHTCYAN_EX}                   System IP {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{ip}{Fore.RESET}
+        ===--=-----------@@@@@@@@@@@-----------=--===        {Fore.LIGHTCYAN_EX}                   Copyright © Mini-AV {Fore.RESET}
+        ===--=----------@@@--@@---@@%-------------==-        {Fore.LIGHTYELLOW_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTCYAN_EX}Veal {Fore.RESET}
+        ===-------------@@@@@@@@@@@@@------------===.        {Fore.LIGHTYELLOW_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTCYAN_EX}Synthetic{Fore.RESET}
         .===--=----------@@@-----@@#----------=--===         
          ===------------------------------------===-         
           ===--=--------------------------------===          
@@ -110,7 +110,7 @@ def monitor_download_directory(directory, KNOWN_VIRUS_HASHES, quarantine_dir):
         observer.stop()
     observer.join()
 
-# everything from here is used to monitor if the stealer is activly trying to decrypt passwords to send to the webhook / Bot / Telegram chat / C2
+
 SENSITIVE_FILES = [f'C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cookies', f'C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Login Data']
 
 
@@ -146,7 +146,7 @@ if __name__ == "__main__":
         "36c7bbf70459d63163aa9d8d43b9ca1a02f837d53004a9ad0574f687e5a6a9d2", # All Centurion Hashes and different obfuscation Methods
         "55cee457c73aa87258a04562c9d04cd3c865608d5dd64366d9cd9bc2fe2f5dd9", # All Centurion Hashes and different obfuscation Methods
         "92e1c28b32241eea5778a35dbb092ce77917395323b722d99aa2bf7efcce9cc8", # Empyrean Stealer
-        "6e0ca09171ff5d693972d3affb97a24e30606ce64259508116d7e2cfbe958ade" # Villa Stealer Also Mine
+        "6e0ca09171ff5d693972d3affb97a24e30606ce64259508116d7e2cfbe958ade" # Villa Stealer
     ]
     download_directory = os.path.join(os.getenv("USERPROFILE"), "Downloads")
     quarantine_dir = "C:\\Quarantine"  # Specify the directory for quarantined files
