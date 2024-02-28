@@ -7,6 +7,7 @@ import requests
 
 # -------------------------------- #
 from PIL import Image
+from getpass import getuser
 from time import time, sleep
 from colorama import Fore
 from notifypy import Notify
@@ -19,7 +20,7 @@ from watchdog.events import FileSystemEventHandler
 
 # ---------------------------------------------- #
 
-PCNAME = {os.getenv("COMPUTERNAME")}
+PCNAME = str(getuser())
 
 # ---------------------------------------------- #
 ip = requests.get("https://api.ipify.org").text
@@ -87,11 +88,11 @@ print(
         ===------------------------------------=--===        {Fore.LIGHTBLUE_EX}                   Status {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Running{Fore.RESET}
         ===------------------------------------=--===        {Fore.LIGHTBLUE_EX}                   Secure {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Check{Fore.RESET}
         ===------------------------------------=--===        {Fore.LIGHTBLUE_EX}                   PC Name {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}{os.getenv('COMPUTERNAME')}{Fore.RESET}
-        ===---------------{b}@@@@@@@@@{r}------------=--===        {Fore.LIGHTBLUE_EX}                   System IP {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}{ip}{Fore.RESET}
-        ===--=-----------{b}@@@@@@@@@@@{r}-----------=--===        {Fore.LIGHTBLUE_EX}                   Copyright © Mini-AV {Fore.RESET}
-        ===--=----------{b}@@@--@@---@@@{r}-------------==-        {Fore.LIGHTBLUE_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Veal {Fore.RESET}
-        ===-------------{b}@@@@@@@@@@@@@{r}------------===.        {Fore.LIGHTBLUE_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Synthetic{Fore.RESET}
-        .===--=----------{b}@@@-----@@@{r}----------=--===         {Fore.LIGHTBLUE_EX}                   Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Sacrifice{Fore.RESET}
+        ===---------------{b}@@@@@@@@@@{r}------------=--===        {Fore.LIGHTBLUE_EX}                  System IP {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}{ip}{Fore.RESET}
+        ===--=-----------{b}@@@@@@@@@@@@{r}-----------=--===        {Fore.LIGHTBLUE_EX}                  Copyright © Mini-AV {Fore.RESET}
+        ===--=----------{b}@@@{r}---{b}@@{r}---{b}@@@{r}-------------==-        {Fore.LIGHTBLUE_EX}                  Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Veal {Fore.RESET}
+        ===-------------{b}@@@@@@@@@@@@@@{r}------------===.        {Fore.LIGHTBLUE_EX}                  Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Synthetic{Fore.RESET}
+        .===--=----------{b}@@@{r}------{b}@@@{r}----------=--===         {Fore.LIGHTBLUE_EX}                  Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Sacrifice{Fore.RESET}
          ===------------------------------------===-         
           ===--=--------------------------------===          
           :===--=------------------------------===           
