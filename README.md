@@ -46,6 +46,20 @@
 | Win11        | ✅ | ✅ | ✅ |
 | Linux        | ❌ | ❌ | ❌ |
 
+
+## Browsers / apps Protected
+
+| Browsers         | Working / Not Working | 
+| :-----------:| :-----------: |
+| Discord Cache          | ✅ | ✅ | ✅ |
+| Chrome Cookies        | ✅ | ✅ | ✅ |
+| Chrome Passwords        | ✅ | ✅ | ✅ |
+| FireFox Cookies        | ❌ | ❌ | ❌ |
+| FireFox Passwords        | ❌ | ❌ | ❌ |
+| Opera Cookies        | ❌ | ❌ | ❌ |
+| Opera Passwords      | ❌ | ❌ | ❌ |
+
+
 ## Install
 
 ### Prerequisites
