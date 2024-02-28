@@ -1,6 +1,7 @@
 import os;         import time       
 import hashlib;    import shutil            
-import requests;   import colorama             
+import requests;   import colorama
+import winreg;     import ctypes    
 # -------------------------------- #
 from colorama            import Fore
 from multiprocessing     import Process
@@ -9,6 +10,7 @@ from watchdog.events     import FileSystemEventHandler
 from PIL                 import Image
 from notifypy            import Notify
 from pystray             import MenuItem, Icon
+from ctypes              import wintypes
 # ---------------------------------------------- #
 
 PCNAME = {os.getenv('COMPUTERNAME')}
@@ -18,6 +20,18 @@ ip = requests.get("https://api.ipify.org").text
 icon = Icon("MiniAV.ico")
 icon.menu = (MenuItem('Exit', lambda: icon.stop()),)
 # ---------------------------------------------- #
+
+
+DISCORD_REGISTRY_KEYS = [
+    r"Software\Discord",
+    r"Software\DiscordOverlay",
+    # Add more Discord registry keys If needed you dont have to
+]
+
+# Define Windows API constants and structures 
+# This is used to stop Stealers from killing the protector
+PROCESS_CREATION_MITIGATION_POLICY = 22
+PROCESS_CREATION_CHILD_PROCESS_RESTRICTED = 1
 
 print(f"""                                     
                   :---:::::::::::::::::::::                  
@@ -51,6 +65,10 @@ print(f"""
                              -=:                             
 """)
 print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current sensitive Files : [ cookies ] [ passwords ]")
+time.sleep(2)
+print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current File For Changes Or Injection : [ Discord Cache ]")
+time.sleep(2)
+print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current Registery for Changes Or Injection : [ Discord Reg Keys ]")
 
 def detect_virus(file_path, KNOWN_VIRUS_HASHES, quarantine_dir):
     with open(file_path, 'rb') as file:
@@ -112,12 +130,14 @@ def monitor_download_directory(directory, KNOWN_VIRUS_HASHES, quarantine_dir):
 
 
 SENSITIVE_FILES = [f'C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cookies', f'C:\\Users\\{PCNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Login Data']
-
+DISCORD_PATH = f"C:\\Users\\{PCNAME}\\AppData\\Roaming\\discord\\Cache"
 
 def check_file_access(file_path):
     for sensitive_file in SENSITIVE_FILES:
         if sensitive_file in file_path:
             return True
+    if DISCORD_PATH in file_path:
+        return True
     return False
 
 
@@ -136,6 +156,36 @@ def main():
     print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Mini-AV is monitoring the current sensitive Files : [ cookies ] [ passwords ]")
     while True:
         monitor_file_access()
+
+
+class Process_Policy(ctypes.Structure):
+    _fields_ = [
+        ("Policy", wintypes.DWORD),
+        ("Flags", wintypes.DWORD),
+    ]
+
+def check_registry_changes():
+    for key_path in DISCORD_REGISTRY_KEYS:
+        try:
+            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_READ)
+            num_subkeys, num_values, last_modified = winreg.QueryInfoKey(key)
+            print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Registry key detected: {key_path}")
+
+
+            print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}INFO {Fore.WHITE}] Terminating process and quarantining file...")
+        except Exception as e:
+            print(f"{Fore.WHITE}[ {Fore.LIGHTGREEN_EX}Error {Fore.WHITE}] Error accessing registry key {key_path}: {e}")
+
+def apply_Process_Policy():
+    policy = Process_Policy()
+    policy.Policy = PROCESS_CREATION_MITIGATION_POLICY
+    policy.Flags = PROCESS_CREATION_CHILD_PROCESS_RESTRICTED
+    ctypes.windll.kernel32.SetProcessMitigationPolicy(PROCESS_CREATION_MITIGATION_POLICY, ctypes.byref(policy), ctypes.sizeof(policy))
+
+def main():
+    apply_Process_Policy()
+    while True:
+        check_registry_changes()
 
 
 if __name__ == "__main__":
