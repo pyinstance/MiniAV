@@ -39,7 +39,7 @@ class title:
         try:
             uptime = round(time() - self.start, 2)
             ctypes.windll.kernel32.SetConsoleTitleW(
-                f"MiniAV | @Veal1 ~ @SyntheticCuhh ~ @2btz | Uptime: {uptime}'s"
+                f"MiniAV | @Resentful ~ @SyntheticCuhh ~ @2btz | Uptime: {uptime}'s"
             )
         except Exception as error:
             print(f"{Fore.LIGHTWHITE_EX}An Error Occured:{Fore.RESET} {error}")
@@ -79,7 +79,7 @@ print(
         ===------------------------------------=--===        {Fore.LIGHTBLUE_EX}                   PC Name {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}{os.getenv('COMPUTERNAME')}{Fore.RESET}
         ===---------------{b}@@@@@@@@@@{r}------------=--===        {Fore.LIGHTBLUE_EX}                  System IP {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}{ip}{Fore.RESET}
         ===--=-----------{b}@@@@@@@@@@@@{r}-----------=--===        {Fore.LIGHTBLUE_EX}                  Copyright © Mini-AV {Fore.RESET}
-        ===--=----------{b}@@@{r}---{b}@@{r}---{b}@@@{r}-------------==-        {Fore.LIGHTBLUE_EX}                  Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Veal {Fore.RESET}
+        ===--=----------{b}@@@{r}---{b}@@{r}---{b}@@@{r}-------------==-        {Fore.LIGHTBLUE_EX}                  Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Resentful {Fore.RESET}
         ===-------------{b}@@@@@@@@@@@@@@{r}------------===.        {Fore.LIGHTBLUE_EX}                  Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Synthetic{Fore.RESET}
         .===--=----------{b}@@@{r}------{b}@@@{r}----------=--===         {Fore.LIGHTBLUE_EX}                  Developers {Fore.LIGHTWHITE_EX}: {Fore.LIGHTBLACK_EX}Sacrifice{Fore.RESET}
          ===------------------------------------===-         
