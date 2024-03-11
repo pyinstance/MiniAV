@@ -7,7 +7,7 @@
 
 <p align="center">
   Discord: Discord.gg/villa1
-  >> https://downfall.wiki/veal
+  >> https://downfall.wiki/resentful
   <br>
   🔱 Join Discord for support and contact 🔱
   Dont forget to Star the repo and follow my page
